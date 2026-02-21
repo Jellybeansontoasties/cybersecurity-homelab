@@ -8,9 +8,8 @@ This site documents my personal cybersecurity home lab running on Arch Linux wit
 
 ## Live Site
 
-🌐 **GitHub Pages:** `https://<username>.github.io/portfolio-site/`
+**GitHub Page:** `https://<jellybeansontoasties>.github.io/portfolio-site/`
 
-*(Replace `<username>` with your GitHub username after deploying)*
 
 ## Tools & Technologies
 
@@ -52,11 +51,3 @@ portfolio-site/
 - **Secondary Accent:** `#3a401a` (dark moss green)
 - **Text:** `#e0e0e0` (light gray)
 - **Font:** JetBrains Mono / Fira Code (monospace)
-
-## Deployment
-
-This site is designed to be deployed on GitHub Pages. Simply push the repository to GitHub and enable GitHub Pages in the repository settings.
-
-## License
-
-This portfolio site is for educational and demonstration purposes only. All security research is conducted in an isolated lab environment.
