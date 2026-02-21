@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Home lab environment configuration: Arch Linux host, KVM/QEMU virtualization, isolated network with Kali, Metasploitable 2, and Ubuntu Server VMs.">
+    <title>Lab Setup | jellybeansontoasties</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="lab-setup.html">Lab Setup</a></li>
+            <li><a href="writeups/writeup-01.html">Writeups</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Lab Setup</h1>
+        <p class="tagline">Home Lab Environment Configuration</p>
+
+        <h2>Host Specifications</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Specification</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Operating System</td>
+                    <td>Arch Linux</td>
+                </tr>
+                <tr>
+                    <td>CPU</td>
+                    <td>Intel i7-13700HX</td>
+                </tr>
+                <tr>
+                    <td>RAM</td>
+                    <td>15GB</td>
+                </tr>
+                <tr>
+                    <td>GPU</td>
+                    <td>NVIDIA RTX 4060</td>
+                </tr>
+                <tr>
+                    <td>Virtualization</td>
+                    <td>KVM/QEMU</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Virtual Machines</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>VM Name</th>
+                    <th>Role</th>
+                    <th>OS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Kali</td>
+                    <td>Attacker</td>
+                    <td>Kali Linux</td>
+                </tr>
+                <tr>
+                    <td>Metasploitable 2</td>
+                    <td>Victim 1</td>
+                    <td>Ubuntu 8.04 (Hardened)</td>
+                </tr>
+                <tr>
+                    <td>Ubuntu Server 22.04</td>
+                    <td>Victim 2</td>
+                    <td>Ubuntu Server 22.04 LTS</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Network Configuration</h2>
+        <p>The lab uses an isolated virtual bridge network for security and isolation:</p>
+        <ul style="margin: 1rem 0; padding-left: 2rem;">
+            <li><strong>Bridge:</strong> virbr1</li>
+            <li><strong>Subnet:</strong> 192.168.100.0/24</li>
+            <li><strong>Type:</strong> Isolated (no external internet access)</li>
+        </ul>
+
+        <h2>Network Topology</h2>
+        <div class="network-diagram">
+            <svg width="100%" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- Bridge -->
+                <rect x="300" y="50" width="200" height="80" fill="none" stroke="#FF8C00" stroke-width="2" rx="5"/>
+                <text x="400" y="75" text-anchor="middle" fill="#FF8C00" font-family="monospace" font-size="14" font-weight="bold">virbr1</text>
+                <text x="400" y="95" text-anchor="middle" fill="#3a401a" font-family="monospace" font-size="12">192.168.100.0/24</text>
+                <text x="400" y="115" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="11">Isolated Bridge</text>
+
+                <!-- Kali VM -->
+                <rect x="50" y="250" width="150" height="100" fill="none" stroke="#FF8C00" stroke-width="2" rx="5"/>
+                <text x="125" y="280" text-anchor="middle" fill="#FF8C00" font-family="monospace" font-size="14" font-weight="bold">Kali</text>
+                <text x="125" y="300" text-anchor="middle" fill="#3a401a" font-family="monospace" font-size="12">Attacker</text>
+                <text x="125" y="320" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="11">192.168.100.10</text>
+                <line x1="200" y1="300" x2="300" y2="90" stroke="#FF8C00" stroke-width="2"/>
+
+                <!-- Metasploitable 2 VM -->
+                <rect x="325" y="250" width="150" height="100" fill="none" stroke="#FF8C00" stroke-width="2" rx="5"/>
+                <text x="400" y="280" text-anchor="middle" fill="#FF8C00" font-family="monospace" font-size="14" font-weight="bold">Metasploitable 2</text>
+                <text x="400" y="300" text-anchor="middle" fill="#3a401a" font-family="monospace" font-size="12">Victim 1</text>
+                <text x="400" y="320" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="11">192.168.100.20</text>
+                <line x1="400" y1="250" x2="400" y2="130" stroke="#FF8C00" stroke-width="2"/>
+
+                <!-- Ubuntu Server VM -->
+                <rect x="600" y="250" width="150" height="100" fill="none" stroke="#FF8C00" stroke-width="2" rx="5"/>
+                <text x="675" y="280" text-anchor="middle" fill="#FF8C00" font-family="monospace" font-size="14" font-weight="bold">Ubuntu Server</text>
+                <text x="675" y="300" text-anchor="middle" fill="#3a401a" font-family="monospace" font-size="12">Victim 2</text>
+                <text x="675" y="320" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="11">192.168.100.30</text>
+                <line x1="600" y1="300" x2="500" y2="90" stroke="#FF8C00" stroke-width="2"/>
+            </svg>
+        </div>
+
+        <div style="margin-top: 3rem;">
+            <h2>Purpose</h2>
+            <p>This isolated lab environment allows for safe penetration testing and vulnerability assessment without risk to production systems or external networks. All attacks are contained within the virtual network.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Cybersecurity Home Lab Portfolio | Built with minimal terminal aesthetic</p>
+    </footer>
+</body>
+</html>
